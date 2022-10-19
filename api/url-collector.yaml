@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: URL Collector API
+  description: API for URL Collector
+  version: 0.0.1
+tags: 
+ - name: pictures
+paths:
+  /pictures:
+    get: 
+      tags:
+        - pictures
+      description: Get pictures URLs  
+      parameters:
+        - name: from
+          in: query
+          description: From date
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-10-18"
+        - name: to
+          in: query
+          description: To date
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-10-20"
+
+      responses: 
+        "200":
+          description: "OK"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pictures"
+        "400": 
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+components:
+  schemas:
+    Pictures:
+      required:
+        - urls
+      properties:
+        urls: 
+          type: array
+          items:
+            type: string
+            pattern: /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/
+          example: ["http://www.example.com", "http://google.com"]
+
+    BadRequest:
+      properties:
+        error: 
+          type: string
+          example: "error message"
